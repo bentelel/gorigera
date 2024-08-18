@@ -34,7 +34,8 @@ func Random_code(length int) string {
 func Code_challenge(code_verifier string) string {
 	sha256_hash := sha256.New()
 	sha256_hash.Write([]byte(code_verifier))
-	return base64.URLEncoding.EncodeToString(sha256_hash.Sum(nil))
+	digest := sha256_hash.Sum(nil)
+	return base64.URLEncoding.WithPadding(base64.NoPadding).EncodeToString(digest)
 }
 
 func Send_challenge(ip_address string, code_verifier string) string {
@@ -100,8 +101,6 @@ func Get_token(ip_address string, code string, code_verifier string) string {
 		code, hostname, code_verifier)
 	header := map[string]string{"Content-Type": "application/x-www-form-urlencoded"}
 	token_url := fmt.Sprintf("https://%s:8443/v1/oauth/token", ip_address)
-
-	fmt.Printf("trying request using hostname: %s \ndata: %s\nurl: %s\n", hostname, data, token_url)
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 		Transport: &http.Transport{
@@ -162,8 +161,9 @@ func Main() {
 	}
 	code_verifier := Random_code(CODE_LENGTH)
 	code := Send_challenge(ip_address, code_verifier)
-	fmt.Print("Press the action button on Dirigera bridge, then hit ENTER ...")
+	fmt.Print("Press the action button on Dirigera bridge, then enter any character and hit ENTER ...")
 	var stopper string
+	// for some reason this does not stop for ENTER with Scanln.. fix that at some point
 	_, err = fmt.Scan(&stopper)
 	token := Get_token(ip_address, code, code_verifier)
 	fmt.Printf("Your TOKEN: %s", token)
