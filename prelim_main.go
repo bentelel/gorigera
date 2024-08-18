@@ -7,5 +7,6 @@ import (
 )
 
 func main() {
-	fmt.Println(hub.Code_challenge(hub.Random_code(32)))
+	fmt.Print("trying to run hub.Main(): \n")
+	hub.Main()
 }
