@@ -57,11 +57,11 @@ func Send_challenge(ip_address string, code_verifier string) string {
 		fmt.Printf("error encountered making GET request: %s", err)
 		return ""
 	}
-	q := req.URL.Query()
+	query := req.URL.Query()
 	for key, value := range params {
-		q.Add(key, value)
+		query.Add(key, value)
 	}
-	req.URL.RawQuery = q.Encode()
+	req.URL.RawQuery = query.Encode()
 	req.Header.Set("Content-Type", "application/json") // or any other headers you need
 	resp, err := client.Do(req)
 	if err != nil {
