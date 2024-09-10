@@ -44,13 +44,13 @@ func New_hub(token string, ip_address string) Hub {
 	}
 }
 
-func Headers(h Hub) map[string]string {
+func Headers(h *Hub) map[string]string {
 	header := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", h.Token)}
 	return header
 }
 
 // the websocketlogic probably needs to be custom written..
-func New_websocketapp(h Hub) Websocketapp {
+func New_websocketapp(h *Hub) Websocketapp {
 	url := h.Websocket_base_url
 	con, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
